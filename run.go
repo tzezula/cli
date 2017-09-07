@@ -16,7 +16,8 @@ import (
 
 const (
 	DefaultFormat = "default"
-	HttpFormat    = "http"
+	HTTPFormat    = "http"
+	JSONFormat    = "json"
 	LocalTestURL  = "http://localhost:8080/myapp/hello"
 )
 
@@ -147,7 +148,7 @@ func runff(ff *funcfile, stdin io.Reader, stdout, stderr io.Writer, method strin
 		// I'm starting to think maybe `fn run` locally should work the same whether sync or async?  Or how would we allow to test the output?
 	}
 	body := "" // used for hot functions
-	if format == HttpFormat {
+	if format == HTTPFormat {
 		// let's swap out stdin for http formatted message
 		input := []byte("")
 		if stdin != nil {
@@ -174,8 +175,9 @@ func runff(ff *funcfile, stdin io.Reader, stdout, stderr io.Writer, method strin
 		body = b.String()
 		// fmt.Println("body:", s)
 		stdin = strings.NewReader(body)
-	}
+	} else if format == JSONFormat {
 
+	}
 	sh = append(sh, ff.ImageName())
 	cmd := exec.Command(sh[0], sh[1:]...)
 	cmd.Stdin = stdin
